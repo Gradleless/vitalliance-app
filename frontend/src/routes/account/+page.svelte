@@ -109,25 +109,25 @@
 
         <div class="grid gap-6 mt-10 md:mt-12 lg:mt-14">
             <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
-              <div class="flex flex-col space-y-1.5 p-6">
-                <h3 class="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">Vos stats</h3>
-              </div>
-              <div class="p-6">
-                <div class="grid md:grid-cols-3 gap-6">
-                  <div>
-                    <div class="text-4xl font-bold">{totalTime}</div>
-                    <div class="text-muted-foreground mr-5">d'heures réalisées en {selectedMonth}</div>
-                  </div>
-                  <div>
-                    <div class="text-4xl font-bold">{pointages.get(selectedMonth)?.length ?? 0}</div>
-                    <div class="text-muted-foreground">Pointages totaux</div>
-                  </div>
-                  <div>
-                    <div class="text-4xl font-bold">{percentageSign}{percentage}%</div>
-                    <div class="text-muted-foreground">Heures comparé au mois précédent</div>
-                  </div>
+                <div class="flex flex-col space-y-1.5 p-6">
+                    <h3 class="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">Vos stats</h3>
                 </div>
-              </div>
+                <div class="p-6">
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div>
+                            <div class="text-4xl font-bold">{totalTime}</div>
+                            <div class="text-muted-foreground mr-5">d'heures réalisées en {selectedMonth}</div>
+                        </div>
+                        <div>
+                            <div class="text-4xl font-bold">{pointages.get(selectedMonth)?.length ?? 0}</div>
+                            <div class="text-muted-foreground">Pointages totaux</div>
+                        </div>
+                        <div>
+                            <div class="text-4xl font-bold">{percentageSign}{percentage}%</div>
+                            <div class="text-muted-foreground">Heures comparé au mois précédent</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         <div class="mt-4">
             <select class="mb-4" bind:value={selectedMonth}>
