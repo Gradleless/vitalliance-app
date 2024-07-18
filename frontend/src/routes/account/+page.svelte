@@ -5,7 +5,8 @@
     import { GetPointage, CalculateTimeHorodatage } from "../../lib/wailsjs/go/main/App";
     import type { PointageTime, Month } from "$lib/store";
     import { get } from 'svelte/store';
-    import { fly, slide } from 'svelte/transition';
+    import { slide } from 'svelte/transition';
+    import Pagination from '$lib/components/Pagination.svelte';
     
     onMount(() => {
         const value = get(store);
@@ -98,6 +99,19 @@
         }
     }
 
+    $: page = 1;
+    $: totalPages = (pointages.get(selectedMonth)?.length ?? 0) / 10;
+    function nextPage() {
+        if (page < totalPages) {
+            page += 1;
+        }
+    }
+
+    function previousPage() {
+        if (page >= 1) {
+            page -= 1;
+        }
+    }
 </script>
 
 <div class="flex p-5 justify-center min-h-screen">
@@ -136,7 +150,7 @@
             {/each}
             </select>
             {#if pointages.get(selectedMonth)}
-            {#each pointages.get(selectedMonth) ?? [] as pointage, index (pointage)}
+            {#each pointages.get(selectedMonth)?.slice((page - 1) * 10, page * 10) ?? [] as pointage, index (pointage)}
                 <div class="flex items center justify-between border-b border-gray-200 py-2" in:slide|global={{ delay: 350 }} out:slide|global>
                 <div class="flex items-center">
                     <div class="flex flex-col">
@@ -149,6 +163,9 @@
                 </div>
                 </div>
             {/each}
+            {#if pointages.get(selectedMonth)?.length ?? 0 > 10}
+                <Pagination {page} {totalPages} size="md" on:next={nextPage} on:previous={previousPage} bgColor="bg-black" textColor="text-white" />
+            {/if}
             {:else}
             <div class="text-center text-gray-500 dark:text-gray-400">Aucun pointage</div>
             {/if}
