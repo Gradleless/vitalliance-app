@@ -54,6 +54,7 @@ type PointageTime struct {
 	Date              string `json:"date"`
 	Hours             int    `json:"hours"`
 	Minutes           int    `json:"minutes"`
+	Seconds           int    `json:"seconds"`
 	ClientName        string `json:"clientName"`
 	Infos             string `json:"infos"`
 	EndPointageDate   string `json:"endPointageDate"`
@@ -248,6 +249,7 @@ func (a *App) CalculateTimeHorodatage(pointages []PointageData) (map[string][]Po
 				Date:              date,
 				Hours:             hours,
 				Minutes:           minutes,
+				Seconds:           int(between.Seconds()) - hours*3600 - minutes*60,
 				ClientName:        start.ClientName,
 				Infos:             start.Infos,
 				EndPointageDate:   endTime.Format("15:04"),

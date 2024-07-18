@@ -6,6 +6,7 @@ export type PointageTime = {
     date: string;
     hours: number;
     minutes: number;
+    seconds: number;
     clientName: string;
     infos: string;
     endPointageDate: string;

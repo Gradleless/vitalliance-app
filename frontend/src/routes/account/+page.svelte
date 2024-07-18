@@ -100,7 +100,8 @@
     }
 
     $: page = 1;
-    $: totalPages = (pointages.get(selectedMonth)?.length ?? 0) / 10;
+    $: totalPages = Math.ceil((pointages.get(selectedMonth)?.length ?? 0) / 10);
+    
     function nextPage() {
         if (page < totalPages) {
             page += 1;
@@ -155,7 +156,7 @@
                 <div class="flex items-center">
                     <div class="flex flex-col">
                     <span class="text-sm text-gray-500 dark:text-gray-400">{new Date(pointage.date).toLocaleDateString()}</span>
-                    <span class="text-sm text-gray-500 dark:text-gray-400">{pointage.hours}h{pointage.minutes}</span>
+                    <span class="text-sm text-gray-500 dark:text-gray-400">{pointage.hours > 0 ? `${pointage.hours}h` : ""}{pointage.minutes > 0 ? `${pointage.minutes}m` : ""}{pointage.seconds > 0 ? `${pointage.seconds}s` : ""}</span>
                     </div>
                 </div>
                 <div class="flex items-center">
