@@ -9,21 +9,32 @@
     
     onMount(() => {
         const value = get(store);
-            if (!value.loginUser) {
-                goto("/");
-            } else {
-                GetPointage(value.loginUser.data["token"]).then(async (response) => {
-                
-                    let pointages = await CalculateTimeHorodatage(response);
-                    const convertedPointages = new Map<Month, PointageTime[]>();
-                    Object.entries(pointages).forEach(([key, value]) => {
-                        convertedPointages.set(key as Month, value);
-                    });
-                    store.set({ loginUser: value.loginUser, pointages: convertedPointages });
-                    let convertedPointagesKeys = Array.from(convertedPointages.keys());
-                    selectedMonth = convertedPointagesKeys[0];
+        if (!value.loginUser) {
+            goto("/");
+        } else {
+            GetPointage(value.loginUser.data["token"]).then(async (response) => {
+            let pointages = await CalculateTimeHorodatage(response);
+            const convertedPointages = new Map<Month, PointageTime[]>();
+            Object.entries(pointages)
+                .sort(([key1], [key2]) => {
+                    const [month1, year1] = key1.split(" ");
+                    const [month2, year2] = key2.split(" ");
+                    // j'aurais dû utiliser un objet Date pour comparer les dates, avant de mettre en français
+                    const monthOrder = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+                    if (year1 === year2) {
+                        return monthOrder.indexOf(month1.toLowerCase()) - monthOrder.indexOf(month2.toLowerCase());
+                    } else {
+                        return year1.localeCompare(year2);
+                    }
+                })
+                .forEach(([key, value]) => {
+                    convertedPointages.set(key as Month, value as PointageTime[]);
                 });
-            }
+            store.set({ loginUser: value.loginUser, pointages: convertedPointages });
+            let convertedPointagesKeys = Array.from(convertedPointages.keys());
+            selectedMonth = convertedPointagesKeys[convertedPointagesKeys.length - 1];
+            });
+        }
     });
 
     let pointages: Map<Month, PointageTime[]> = new Map<Month, PointageTime[]>();
@@ -120,13 +131,13 @@
             </div>
         <div class="mt-4">
             <select class="mb-4" bind:value={selectedMonth}>
-            {#each Array.from(pointages.keys()).sort() as month}
+            {#each Array.from(pointages.keys()) as month}
                 <option value={month}>{month}</option>
             {/each}
             </select>
             {#if pointages.get(selectedMonth)}
-            {#each pointages.get(selectedMonth) ?? [] as pointage}
-                <div class="flex items center justify-between border-b border-gray-200 py-2" in:slide>
+            {#each pointages.get(selectedMonth) ?? [] as pointage, index (pointage)}
+                <div class="flex items center justify-between border-b border-gray-200 py-2" in:slide|global={{ delay: 350 }} out:slide|global>
                 <div class="flex items-center">
                     <div class="flex flex-col">
                     <span class="text-sm text-gray-500 dark:text-gray-400">{new Date(pointage.date).toLocaleDateString()}</span>

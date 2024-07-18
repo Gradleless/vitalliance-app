@@ -2,7 +2,7 @@
   import "$lib/global.css"
 </script>
 
-<div class="app min-h-screen">
+<div class="app min-h-screen bg-white">
 
   <main>
     <slot/>
