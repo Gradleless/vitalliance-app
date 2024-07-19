@@ -230,8 +230,8 @@ func (a *App) CalculateTimeHorodatage(pointages []PointageData) (map[string][]Po
 	for month, pointages := range pointagesOrdered {
 
 		for i := 0; i < len(pointages)-1; i += 2 {
-			start := pointages[i]
-			end := pointages[i+1]
+			end := pointages[i]
+			start := pointages[i+1]
 			startTime := time.Unix(start.Horodatage/1000, 0)
 			endTime := time.Unix(end.Horodatage/1000, 0)
 
@@ -239,7 +239,19 @@ func (a *App) CalculateTimeHorodatage(pointages []PointageData) (map[string][]Po
 				fmt.Println("Error: Start and end pointages are not for the same client")
 			}
 
-			between := startTime.Sub(endTime)
+			if i+2 < len(pointages) && pointages[i+2].TypePointage == 1 {
+				fmt.Println("Error: Next pointage is a start pointage")
+				for j := i + 2; j < len(pointages)-1; j++ {
+					if pointages[j].TypePointage == 2 {
+						start = pointages[j-1]
+						startTime = time.Unix(start.Horodatage/1000, 0)
+						i = j
+						break
+					}
+				}
+			}
+
+			between := endTime.Sub(startTime)
 			hours := int(between.Hours())
 			minutes := int(between.Minutes()) - hours*60
 			date := startTime.Format("2006-01-02")
