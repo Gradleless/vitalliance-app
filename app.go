@@ -235,17 +235,12 @@ func (a *App) CalculateTimeHorodatage(pointages []PointageData) (map[string][]Po
 			startTime := time.Unix(start.Horodatage/1000, 0)
 			endTime := time.Unix(end.Horodatage/1000, 0)
 
-			if pointages[i].ClientName != pointages[i+1].ClientName {
-				fmt.Println("Error: Start and end pointages are not for the same client")
-			}
-
-			if i+2 < len(pointages) && pointages[i+2].TypePointage == 1 {
-				fmt.Println("Error: Next pointage is a start pointage")
+			if i+2 < len(pointages) && pointages[i+2].TypePointage == 1 && pointages[i+2].ClientName == pointages[i].ClientName {
 				for j := i + 2; j < len(pointages)-1; j++ {
 					if pointages[j].TypePointage == 2 {
 						start = pointages[j-1]
 						startTime = time.Unix(start.Horodatage/1000, 0)
-						i = j
+						i = j - 2
 						break
 					}
 				}
